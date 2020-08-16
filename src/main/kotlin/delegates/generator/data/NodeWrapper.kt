@@ -1,7 +1,7 @@
-
-import com.azoft.json2dart.delegates.generator.toClassName
-import com.azoft.json2dart.delegates.generator.toSneakCase
+package delegates.generator.data
 import com.fasterxml.jackson.databind.JsonNode
+import toClassName
+import toSneakCase
 
 data class NodeWrapper(
     val node: JsonNode?,

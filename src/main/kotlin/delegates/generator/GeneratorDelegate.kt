@@ -1,6 +1,6 @@
 package delegates.generator
 
-import delegates.generator.old.DartClassGenerator
+import delegates.generator.data.DartClassGenerator
 import FileIOException
 import MessageDelegate
 import com.intellij.ide.projectView.ProjectView
@@ -28,8 +28,10 @@ class GeneratorDelegate(
                             json,
                             File(event.getData(CommonDataKeys.VIRTUAL_FILE)?.path),
                             fileName.takeIf(String::isNotBlank) ?: "response"
+                            , false
                         )
                         messageDelegate.sendNotification("Dart class has been generated")
+                        messageDelegate.sendNotification("Currently this Plugin is in development. if any error please raise a issue on github")
                     } catch (e: Throwable) {
                         when (e) {
                             is IOException -> messageDelegate.onException(FileIOException())

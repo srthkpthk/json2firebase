@@ -1,6 +1,4 @@
-package delegates.generator.old.data
-
-import NodeWrapper
+package delegates.generator.data
 
 
 data class NodeInfo(

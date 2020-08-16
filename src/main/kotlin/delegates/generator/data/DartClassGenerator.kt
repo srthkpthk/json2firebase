@@ -1,18 +1,16 @@
-package delegates.generator.old
+package delegates.generator.data
 
-import NodeWrapper
 import NotAFlutterProject
 import SyntaxException
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.node.ArrayNode
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import delegates.generator.old.data.NodeInfo
 import java.io.*
 import java.util.*
 
 
 class DartClassGenerator {
-
+    private var isRootFile = true
     fun generateFromJson(source: String, destiny: File, rootName: String, isFinal: Boolean) {
         val nodesToProcessStack = initStack(source, rootName)
         val packageTemplate = extractPackageName(destiny)
@@ -22,6 +20,7 @@ class DartClassGenerator {
         var target: FileOutputStream
         var constructorBuilder: StringBuilder
         var serializatorBuilder: StringBuilder
+        var classConstructorBuilder: StringBuilder
         var bufferFile: File
 
         while (nodesToProcessStack.isNotEmpty()) {
@@ -34,6 +33,7 @@ class DartClassGenerator {
 
             buffer.writeText("\nclass ${nodeWrapper.className} {\n\n")
             try {
+                if (isRootFile) target.writeText("import 'package:cloud_firestore/cloud_firestore.dart';")
                 nodeWrapper.node?.fields()?.forEach { (name, node) ->
                     processNode(buffer, node, name, finalMode).let { nodeInfo ->
                         nodeInfo.node?.apply {
@@ -76,10 +76,12 @@ class DartClassGenerator {
         target: FileOutputStream,
         constructorBuilder: StringBuilder,
         serializatorBuilder: StringBuilder
+
     ) {
         constructorBuilder.apply {
             deleteCharAt(length - 1).deleteCharAt(length - 1).append(";\n")
         }
+
         serializatorBuilder
             .append("\t\treturn data;\n")
             .append("\t}\n")
