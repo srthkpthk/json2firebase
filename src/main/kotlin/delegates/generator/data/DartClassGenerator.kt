@@ -5,7 +5,10 @@ import SyntaxException
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.node.ArrayNode
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import java.io.*
+import java.io.BufferedReader
+import java.io.File
+import java.io.FileOutputStream
+import java.io.FileReader
 import java.util.*
 
 
@@ -184,7 +187,7 @@ class DartClassGenerator {
             className,
             this,
             "$className.fromJsonMap(map[\"$fieldName\"]),\n",
-            "\t\tdata['$field'] = $field == null ? null : $field.toJson();\n"
+            "\t\tdata()['$field'] = $field == null ? null : $field.toJson();\n"
         )
     }
 
@@ -198,11 +201,11 @@ class DartClassGenerator {
 
     private fun NodeInfo.buildListSerialization(rawName: String) =
         if (node != null) {
-            "\t\tdata['$rawName'] = ${node.fieldName} != null ? \n" +
+            "\t\tdata()['$rawName'] = ${node.fieldName} != null ? \n" +
                     "\t\t\tthis.${node.fieldName}.map((v) => v.toJson()).toList()\n" +
                     "\t\t\t: null;\n"
         } else {
-            "\t\tdata['$rawName'] = $rawName;\n"
+            "\t\tdata()['$rawName'] = $rawName;\n"
         }
 
 
